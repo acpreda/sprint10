@@ -11,14 +11,11 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
     }
 
     @Override
-    public void createAccount(String tenant, String code, String unit, boolean memo, boolean summary, String name) {
-        var account = new Account(tenant, code, unit, memo, summary, BigDecimal.ZERO, name);
-        List<Account> foundAccounts = findAccountByCode(tenant, code);
+    public void createAccount(String code, String unit, boolean memo, boolean summary, String name) {
+        var account = new Account(code, unit, memo, summary, BigDecimal.ZERO, name);
+        List<Account> foundAccounts = findAccountByCode(code);
         if (foundAccounts.size() > 0) {
             throw new IllegalArgumentException("Account code duplicated");
-        }
-        if (tenant == null || tenant.trim().equals("")) {
-            throw new IllegalArgumentException("Tenant is blank");
         }
         if (unit == null || unit.trim().equals("")) {
             throw new IllegalArgumentException("Unit is blank");
@@ -31,10 +28,9 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
 
     private void insert(Account account) {
         String sql = "" +
-                "insert into account (tenant, code, unit, memo, summary, balance, name) " +
+                "insert into account (code, unit, memo, summary, balance, name) " +
                 "values (?, ?, ?, ?, ?, ?, ?)";
         super.insert(sql, new Object[][]{new Object[]{
-                account.getTenant(),
                 account.getCode(),
                 account.getUnit(),
                 account.isMemo(),
@@ -44,20 +40,19 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
         }});
     }
 
-    private List<Account> findAccountByCode(String tenant, String code) {
+    private List<Account> findAccountByCode(String code) {
         String sql = "" +
-                "select tenant, code, unit, memo, summary, balance, name " +
+                "select code, unit, memo, summary, balance, name " +
                 "  from account where tenant = ? and code = ?";
-        return super.select(sql, new Object[]{tenant, code}, (rs, i) -> {
+        return super.select(sql, new Object[]{code}, (rs, i) -> {
             try {
                 return new Account(
                         rs.getString(1),
                         rs.getString(2),
-                        rs.getString(3),
+                        rs.getBoolean(3),
                         rs.getBoolean(4),
-                        rs.getBoolean(5),
-                        rs.getBigDecimal(6),
-                        rs.getString(7)
+                        rs.getBigDecimal(5),
+                        rs.getString(6)
                 );
             } catch (Exception e) {
                 throw new RuntimeException("Error finding account", e);

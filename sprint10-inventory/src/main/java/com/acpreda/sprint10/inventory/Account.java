@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 public class Account {
 
-    private final String tenant;
     private final String code;
     private final String unit;
     private final boolean memo;
@@ -12,18 +11,13 @@ public class Account {
     private final BigDecimal balance;
     private final String name;
 
-    public Account(String tenant, String code, String unit, boolean memo, boolean summary, BigDecimal balance, String name) {
-        this.tenant = tenant;
+    public Account(String code, String unit, boolean memo, boolean summary, BigDecimal balance, String name) {
         this.code = code;
         this.unit = unit;
         this.memo = memo;
         this.summary = summary;
         this.balance = balance;
         this.name = name;
-    }
-
-    public String getTenant() {
-        return tenant;
     }
 
     public String getCode() {
