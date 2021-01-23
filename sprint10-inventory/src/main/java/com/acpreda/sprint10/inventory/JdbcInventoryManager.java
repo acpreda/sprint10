@@ -72,6 +72,7 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
         }});
     }
 
+    @Override
     public Account account(String code) {
         String sql = "" +
                 "select account, unit, memo, summary, balance, name " +
