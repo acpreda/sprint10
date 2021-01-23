@@ -8,18 +8,20 @@ import java.util.List;
 
 public final class TransactionBuilder {
 
+    private final Long tx;
     private final String description;
     private final ZonedDateTime whenBooked;
     private final List<Entry> entries;
 
-    private TransactionBuilder(ZoneId zoneId, String description) {
+    private TransactionBuilder(Long tx, ZoneId zoneId, String description) {
         this.entries = new ArrayList<>();
         this.whenBooked = ZonedDateTime.now(zoneId);
         this.description = description;
+        this.tx = tx;
     }
 
-    public static TransactionBuilder start(ZoneId zoneId, String description) {
-        return new TransactionBuilder(zoneId, description);
+    public static TransactionBuilder start(Long tx, ZoneId zoneId, String description) {
+        return new TransactionBuilder(tx, zoneId, description);
     }
 
     public TransactionBuilder with(Account account, BigDecimal amount, ZonedDateTime whenCharged) {
@@ -28,6 +30,6 @@ public final class TransactionBuilder {
     }
 
     public Transaction build() {
-        return new Transaction(this.description, this.entries, this.whenBooked);
+        return new Transaction(this.tx, this.description, this.entries, this.whenBooked);
     }
 }

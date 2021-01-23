@@ -1,14 +1,14 @@
 /*
 drop table entry;
-drop table transaction;
+drop table tx;
 drop table account;
 */
 
 create table account (
     account varchar(127) not null,
     unit varchar(7) not null,
-    memo bit not null,
-    summary bit not null,
+    memo boolean not null,
+    summary boolean not null,
     balance numeric(12,6) not null,
     name varchar(255) not null,
     constraint pk_account primary key (account)

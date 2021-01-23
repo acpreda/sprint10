@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,11 +51,17 @@ public class JdbcSupport {
                 pStatement.setString(i + 1, (String) p);
             } else if (p instanceof BigDecimal) {
                 pStatement.setBigDecimal(i + 1, (BigDecimal) p);
+            } else if (p instanceof Long) {
+                pStatement.setLong(i + 1, (Long) p);
             } else if (p instanceof Boolean) {
                 pStatement.setBoolean(i + 1, (Boolean) p);
+            } else if (p instanceof ZonedDateTime) {
+                OffsetDateTime oft = OffsetDateTime.ofInstant(((ZonedDateTime) p).toInstant(), ((ZonedDateTime) p).getZone());
+                pStatement.setObject(i + 1, oft);
             } else {
                 throw new IllegalArgumentException("Parameter type " + p.getClass() + " at index " + i + " not supported");
             }
+            i++;
         }
     }
 
