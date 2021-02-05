@@ -120,4 +120,29 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
         insert(sqlEntry, params);
         return transaction;
     }
+
+    @Override
+    public List<Account> getAccountsBySQL(String sql) {
+        //String sql = "select account, unit, memo, summary, balance, name from account";
+        var accountList = super.select(sql, new Object[]{}, (rs, i) -> {
+            try {
+                return new Account(
+                        rs.getString(1),
+                        rs.getString(2),
+                        rs.getBoolean(3),
+                        rs.getBoolean(4),
+                        rs.getBigDecimal(5),
+                        rs.getString(6)
+                );
+            } catch (Exception e) {
+                throw new RuntimeException("Error finding account", e);
+            }
+        });
+
+        if (accountList.size() == 0) {
+            return null;
+        } else {
+            return accountList;
+        }
+    }
 }
