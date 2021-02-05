@@ -6,6 +6,8 @@ public interface InventoryManager {
 
     Account account(String account);
 
+    List<Account> accountsByPattern(String pattern);
+
     Account createAccount(String code, String unit, boolean memo, boolean summary, String name);
 
     Transaction saveTransaction(Transaction transaction);

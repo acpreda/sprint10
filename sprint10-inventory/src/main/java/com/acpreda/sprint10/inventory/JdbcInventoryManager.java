@@ -7,6 +7,8 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class JdbcInventoryManager extends JdbcSupport implements InventoryManager {
 
@@ -29,8 +31,8 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
                         rs.getBoolean(3),
                         rs.getBoolean(4),
                         rs.getBigDecimal(5),
-                        rs.getString(6)
-                );
+                        rs.getString(6),
+                        rs.getInt(7));
             } catch (Exception e) {
                 throw new RuntimeException("Error finding account", e);
             }
@@ -43,7 +45,8 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
 
     @Override
     public Account createAccount(String code, String unit, boolean memo, boolean summary, String name) {
-        var account = new Account(code, unit, memo, summary, BigDecimal.ZERO, name);
+        int level = count(code, '-');
+        var account = new Account(code, unit, memo, summary, BigDecimal.ZERO, name, level);
         Account foundAccount = account(code);
         if (foundAccount != null) {
             throw new IllegalArgumentException("Account code duplicated");
@@ -56,6 +59,10 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
         }
         insert(account);
         return account;
+    }
+
+    private int count(String str, char character) {
+        return Long.valueOf(str.chars().filter(x -> x == character).count()).intValue();
     }
 
     private void insert(Account account) {
@@ -86,8 +93,8 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
                         rs.getBoolean(3),
                         rs.getBoolean(4),
                         rs.getBigDecimal(5),
-                        rs.getString(6)
-                );
+                        rs.getString(6),
+                        rs.getInt(7));
             } catch (Exception e) {
                 throw new RuntimeException("Error finding account", e);
             }
@@ -100,6 +107,13 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
         } else {
             return accountList.get(0);
         }
+    }
+
+    public List<Account> accountsByPattern(String regExp) {
+        Pattern pattern = Pattern.compile(regExp);
+        return this.accounts.values().stream()
+                .filter(account -> pattern.matcher(account.getCode()).matches())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -132,8 +146,8 @@ public class JdbcInventoryManager extends JdbcSupport implements InventoryManage
                         rs.getBoolean(3),
                         rs.getBoolean(4),
                         rs.getBigDecimal(5),
-                        rs.getString(6)
-                );
+                        rs.getString(6),
+                        rs.getInt(7));
             } catch (Exception e) {
                 throw new RuntimeException("Error finding account", e);
             }
