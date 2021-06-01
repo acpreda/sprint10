@@ -19,6 +19,7 @@
         <module>sprint10-accountability</module>
         <module>sprint10-inventory</module>
         <module>sprint10-vfs</module>
+        <module>sprint10-test-by-reflection</module>
     </modules>
 
 </project>
