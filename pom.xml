@@ -22,6 +22,7 @@
 
         <junit.version>5.7.1</junit.version>
         <commons.lang3.version>3.10</commons.lang3.version>
+        <querydsl.version>4.2.2</querydsl.version>
     </properties>
 
     <modules>
@@ -29,6 +30,7 @@
         <module>sprint10-db-doc</module>
         <module>sprint10-return</module>
         <module>sprint10-commons</module>
+        <module>sprint10-jpa</module>
     </modules>
 
 
