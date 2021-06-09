@@ -5,13 +5,11 @@
     <parent>
         <artifactId>sprint10</artifactId>
         <groupId>com.acpreda</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.acpreda.sprint10</groupId>
     <artifactId>sprint10-test-by-reflection</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Provides useful assertions for unit and integration testing by reflection</description>
@@ -38,13 +36,6 @@
         <developerConnection>scm:git:ssh://github.com:acpreda/sprint10.git</developerConnection>
         <url>http://github.com/acpreda/sprint10/tree/master</url>
     </scm>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <junit.version>5.7.2</junit.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
         <dependency>
