@@ -59,7 +59,8 @@ public class OracleMetadataProvider extends MetadataProvider {
             List<Column> columns = new ArrayList<>();
             while (columnsResult.next()) {
                 String columnName = columnsResult.getString(4);
-                Column column = new Column(columnName);
+                String type = columnsResult.getString(6);
+                Column column = new Column(columnName, type);
                 columns.add(column);
             }
             columnsResult.close();

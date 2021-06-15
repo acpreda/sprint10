@@ -9,7 +9,7 @@ A continuación se listan las tablas que hacen parte de la base de datos del sis
 |Nombre|Tipo|Descripción|
 |-|-|-|
 <#list table.columns as column>
-|${column.name}|||
+|${column.name}|${column.type}||
 </#list>
 </#list>
 
