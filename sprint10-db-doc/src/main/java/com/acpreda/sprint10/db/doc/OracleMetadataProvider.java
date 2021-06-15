@@ -8,10 +8,12 @@ import java.util.List;
 public class OracleMetadataProvider extends MetadataProvider {
 
     private final String schema;
+    private final String[] tableFilters;
 
-    public OracleMetadataProvider(DataSource dataSource, String schema) {
+    public OracleMetadataProvider(DataSource dataSource, String schema, String[] tableFilters) {
         super(dataSource);
         this.schema = schema;
+        this.tableFilters = tableFilters;
     }
 
     @Override
@@ -25,33 +27,31 @@ public class OracleMetadataProvider extends MetadataProvider {
         try {
             connection = dataSource.getConnection();
             DatabaseMetaData metaData = connection.getMetaData();
-            ResultSet tablesResult = metaData.getTables(null, schema, "RUA_UBIC%", null);
             List<Table> tables = new ArrayList<>();
+            for(String tableFilter : tableFilters) {
+                ResultSet tablesResult = metaData.getTables(null, schema, tableFilter, null);
 
-            String tableCommentSql = "" +
-                    "select table_name, comments " +
-                    "  from user_tab_comments " +
-                    " where table_name = ?";
-            PreparedStatement stmt = connection.prepareStatement(tableCommentSql);
+                String tableCommentSql = "" +
+                        "select table_name, comments " +
+                        "  from user_tab_comments " +
+                        " where table_name = ?";
+                PreparedStatement stmt = connection.prepareStatement(tableCommentSql);
 
-            while (tablesResult.next()) {
-                String tableName = tablesResult.getString(3);
-                Column[] columns = getColumns(tableName);
+                while (tablesResult.next()) {
+                    String tableName = tablesResult.getString(3);
+                    Column[] columns = getColumns(tableName);
 
-                String tableComment = null;
-                stmt.setString(1, tableName);
-                ResultSet rs = stmt.executeQuery();
-                if(rs.next()) {
-                    tableComment = rs.getString(2);
+                    String tableComment = null;
+                    stmt.setString(1, tableName);
+                    ResultSet rs = stmt.executeQuery();
+                    if (rs.next()) {
+                        tableComment = rs.getString(2);
+                    }
+
+                    Table table = new Table(tableName, tableComment, columns);
+                    tables.add(table);
                 }
-
-                Table table = new Table(tableName, tableComment, columns);
-                tables.add(table);
-            }
-            tablesResult.close();
-
-            for(Table table : tables) {
-
+                tablesResult.close();
             }
             return tables.toArray(new Table[0]);
         } catch (SQLException throwable) {

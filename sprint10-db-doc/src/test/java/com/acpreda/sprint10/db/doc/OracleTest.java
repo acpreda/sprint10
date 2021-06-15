@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 
 class OracleTest {
 
@@ -21,7 +20,8 @@ class OracleTest {
         oracleDS.setUser("RUAU");
         oracleDS.setPassword("RUAU");
 
-        OracleMetadataProvider metadataProvider = new OracleMetadataProvider(oracleDS, "RUAU");
+        String[] tableFilters = new String[]{"RUA_SUE_%", "RUA_UBICA%_"};
+        OracleMetadataProvider metadataProvider = new OracleMetadataProvider(oracleDS, "RUAU", tableFilters);
         MarkdownFormat format = new MarkdownFormat();
 
         byte[] bytes = format.format(metadataProvider.getDatabase());

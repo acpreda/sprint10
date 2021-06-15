@@ -5,6 +5,7 @@ A continuación se listan las tablas que hacen parte de la base de datos del sis
 ## Tablas
 
 <#list tables as table>
+
 ### ${table.name}
 
 ${table.comments!}
