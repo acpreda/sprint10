@@ -1,6 +1,9 @@
 package com.acpreda.sprint10.db.doc;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,26 @@ public class OracleMetadataProvider extends MetadataProvider {
     public Database getDatabase() {
         Table[] tables = getTables();
         return new Database(tables);
+    }
+
+    @Override
+    public String updateCommentsScript(Database database) {
+        StringBuilder sb = new StringBuilder();
+        for(Table table : database.getTables()) {
+            if(StringUtils.isBlank(table.getComments())) {
+                sb.append("comment on table ")
+                        .append(table.getName())
+                        .append(" is '';\n");
+            }
+            for(Column column  : table.getColumns()) {
+                if(StringUtils.isBlank(column.getComments())) {
+                    sb.append("comment on column ")
+                            .append(table.getName()).append(".").append(column.getName())
+                            .append(" is '';\n");
+                }
+            }
+        }
+        return sb.toString();
     }
 
     private Table[] getTables() {

@@ -12,4 +12,6 @@ public abstract class MetadataProvider {
 
     public abstract Database getDatabase();
 
+    public abstract String updateCommentsScript(Database database);
+
 }

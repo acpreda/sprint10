@@ -20,15 +20,21 @@ class OracleTest {
         oracleDS.setUser("RUAU");
         oracleDS.setPassword("RUAU");
 
-        String[] tableFilters = new String[]{"RUA_SUE_%", "RUA_UBICA%_"};
+        String[] tableFilters = new String[]{"RUA_%"};
         OracleMetadataProvider metadataProvider = new OracleMetadataProvider(oracleDS, "RUAU", tableFilters);
         MarkdownFormat format = new MarkdownFormat();
-
-        byte[] bytes = format.format(metadataProvider.getDatabase());
+        Database database = metadataProvider.getDatabase();
+        byte[] bytes = format.format(database);
         Assertions.assertNotNull(bytes);
         System.out.println(new String(bytes, StandardCharsets.UTF_8));
         FileUtils.writeByteArrayToFile(new File("/tmp/database.md"), bytes);
 
+        String updateScript = metadataProvider.updateCommentsScript(database);
+        Assertions.assertNotNull(updateScript);
+        System.out.println(updateScript);
+        FileUtils.writeByteArrayToFile(
+                new File("/tmp/database.sql"),
+                updateScript.getBytes(StandardCharsets.UTF_8));
     }
 
 }
