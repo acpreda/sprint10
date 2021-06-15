@@ -23,6 +23,7 @@
         <junit.version>5.7.1</junit.version>
         <commons.lang3.version>3.10</commons.lang3.version>
         <querydsl.version>4.2.2</querydsl.version>
+        <freemarker.version>2.3.29</freemarker.version>
     </properties>
 
     <modules>
